@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class KategoriController extends Controller
@@ -35,7 +36,15 @@ class KategoriController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(([
+            'title_category'=>'required|unique:categories'
+
+        ]));
+        Kategori::create([
+            'title_category'=>$request->title_category,
+            'slug_category'=>str_replace(' ','-',$request->title_category)
+        ]);
+        return redirect()->route('backend.kategory.index')->with('success', 'category has been added');
     }
 
     /**
@@ -80,6 +89,9 @@ class KategoriController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Kategori::find($id)->delete();
+        return redirect()->route('backend.kategori.index')->with ('success', 'category has been added');
     }
-}
+    
+    }
+
